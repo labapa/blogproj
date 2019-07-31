@@ -149,6 +149,8 @@ NAVER_SECRET_KEY = 'yPMfMpxsom'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+ALLOWED_HOSTS = ['*']
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [

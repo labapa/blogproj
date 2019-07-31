@@ -1,0 +1,85 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block inner %}
+
+{% load staticfiles %}
+
+{% static 'kakao_login_yello.png' as kakao_button %}
+{% static 'kakao_login_yellow.png' as kakao_button_hover %}
+{% static 'naver_login_green.png' as naver_button %}
+{% static 'naver_login_white.png' as naver_button_hover %}
+{% static 'google_login_white2.png' as google_button %}
+{% static 'google_login_blue2.png' as google_button_hover %}
+
+
+<h1>{% trans "Sign In" %}</h1>
+
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<p>{% blocktrans with site.name as site_name %}
+소셜 계정으로 로그인하세요. 소셜계정이 없는 경우, mayoday 웹 서비스를 이용하시려면, 
+<a href="{{ signup_url }}">회원가입</a> 을 하고 이용하여 주시기 바랍니다.{% endblocktrans %}</p>
+
+<div class="socialaccount_ballot">
+
+  
+<div class="panel panel-default user-panel">
+
+    <br>
+    
+        <span>
+            <a href = "/accounts/google/login/?process=login">
+                <img src="{{ google_button }}"
+                     onmouseover="this.src='{{ google_button_hover }}'"
+                     onmouseleave="this.src='{{ google_button }}'"height="34">
+            </a>
+        </span>
+        <span>
+            <a href = "/accounts/kakao/login/?process=login">
+                <img src="{{ kakao_button }}"
+                     onmouseover="this.src='{{ kakao_button_hover }}'"
+                     onmouseleave="this.src='{{ kakao_button }}'"height="34">
+            </a>
+        </span>
+        <span>
+            <a href = "/accounts/naver/login/?process=login">
+                <img src="{{ naver_button }}"
+                     onmouseover="this.src='{{ naver_button_hover }}'"
+                     onmouseleave="this.src='{{ naver_button }}'"height="34">
+            </a>
+        </span>
+   
+</div>
+
+  <br>
+  <div class="login-or">{% trans 'or' %}</div>
+  <br>
+
+</div>
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+</form>
+
+{% endblock %}
+
